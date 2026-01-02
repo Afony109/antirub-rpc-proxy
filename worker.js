@@ -30,6 +30,14 @@ export default {
       return new Response("Method Not Allowed", { status: 405, headers: cors });
     }
 
+    const requiredKey = env?.ANTIRUB_RPC_KEY;
+if (requiredKey) {
+  const providedKey = request.headers.get("x-antirub-key") || "";
+  if (providedKey !== requiredKey) {
+    return new Response("Forbidden", { status: 403, headers: cors });
+  }
+}
+
     const ct = request.headers.get("Content-Type") || "";
     if (!ct.toLowerCase().includes("application/json")) {
       return new Response("Unsupported Content-Type", { status: 415, headers: cors });
